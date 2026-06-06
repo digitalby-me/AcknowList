@@ -1,5 +1,32 @@
 # Changelog
 
+## 3.4.2 (18 April 2026)
+
+- Update `AcknowList` to make the initializer and `+` operator public, by Andreas Ganske (@ChaosCoder)
+
+
+## 3.4.1 (3 March 2026)
+
+- Fixed warning in Package declaration
+
+
+## 3.4.0 (12 November 2025)
+
+- Update `AcknowListSwiftUIView` to use default list style, by Manuel Sánchez (@manasv)
+- Improve support for Linux, Android, and Wasm
+
+
+## 3.3.0 (2 February 2025)
+
+- Add initializer to `AcknowListSwiftUI` to load default acknow list, by Tisfeng (@tisfeng)
+- Update `AcknowViewController.acknowledgement` to `open` access level for customizability, by cheshire (@cheshire0105)
+
+
+## 3.2.0 (11 June 2024)
+
+- Add visionOS support
+
+
 ## 3.1.0 (25 January 2024)
 
 - Add `GitHubAPI` to get licenses from GitHub API

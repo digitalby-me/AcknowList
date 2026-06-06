@@ -3,7 +3,7 @@
 //  AcknowExample
 //
 //  Created by Vincent Tourraine on 22/08/15.
-//  Copyright © 2015-2024 Vincent Tourraine. All rights reserved.
+//  Copyright © 2015-2026 Vincent Tourraine. All rights reserved.
 //
 
 import XCTest
@@ -28,7 +28,7 @@ class AcknowListViewControllerTests: XCTestCase {
     }
 
     #if os(iOS)
-    @available (iOS 13.0, *)
+    @available(iOS 13.0, *)
     func testConfigureTableViewWithCustomStyle() throws {
         let bundle = resourcesBundle()
         let plistFileURL = try XCTUnwrap(bundle.url(forResource: "Pods-acknowledgements", withExtension: "plist"))
