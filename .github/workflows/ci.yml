@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: SPM build + test (macOS, Swift 6)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Toolchain
+        run: swift --version
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+
+  ios-test:
+    name: Build + test (iOS, Swift 6)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Build and test the SwiftPM package on iOS
+        run: |
+          # Build the SwiftPM package (Swift 6 mode), not the legacy Swift-5 Xcode project.
+          mv AcknowList.xcodeproj /tmp/AcknowList.xcodeproj.bak
+          udid=$(xcrun simctl list devices available --json | jq -r '[.devices[][] | select(.name|test("iPhone"))][0].udid')
+          echo "Using simulator $udid"
+          xcodebuild test -scheme AcknowList -destination "id=$udid" -skipPackagePluginValidation CODE_SIGNING_ALLOWED=NO
+
+  compile:
+    name: Compile (${{ matrix.platform }}, Swift 6)
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: tvOS
+            destination: generic/platform=tvOS Simulator
+          - platform: watchOS
+            destination: generic/platform=watchOS Simulator
+          - platform: visionOS
+            destination: generic/platform=visionOS Simulator
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Build the SwiftPM package for ${{ matrix.platform }}
+        run: |
+          mv AcknowList.xcodeproj /tmp/AcknowList.xcodeproj.bak
+          xcodebuild build -scheme AcknowList -destination '${{ matrix.destination }}' -skipPackagePluginValidation CODE_SIGNING_ALLOWED=NO

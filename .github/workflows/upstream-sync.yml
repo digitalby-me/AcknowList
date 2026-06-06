@@ -1,0 +1,26 @@
+name: Upstream sync
+
+# Keeps the fork current with vtourraine/AcknowList without anyone remembering to.
+# Daily check: if upstream cut a newer release, re-apply the digitalby overlay onto
+# it and open a PR (auto-merge when clean, action-needed when it conflicts).
+
+on:
+  schedule:
+    - cron: '17 6 * * *'   # 06:17 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history; the sync rebases the overlay
+      - name: Re-base digitalby overlay onto latest upstream release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/upstream-sync.sh
