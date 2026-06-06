@@ -2,7 +2,13 @@ name: Upstream sync
 
 # Keeps the fork current with vtourraine/AcknowList without anyone remembering to.
 # Daily check: if upstream cut a newer release, re-apply the digitalby overlay onto
-# it and open a PR (auto-merge when clean, action-needed when it conflicts).
+# it and open a PR for review (action-needed when it conflicts).
+#
+# Token: pushes/PRs made with the default GITHUB_TOKEN do NOT trigger other
+# workflows, so a sync PR opened with it would not run CI. Configure a fine-grained
+# PAT secret `SYNC_PAT` (contents + pull-requests: write) so the sync PR triggers CI
+# and can auto-merge once green. Without it the workflow still opens the PR, but CI
+# only runs after a human nudges the branch (see issue tracking SYNC_PAT setup).
 
 on:
   schedule:
@@ -20,7 +26,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0   # full history; the sync rebases the overlay
+          token: ${{ secrets.SYNC_PAT || github.token }}
       - name: Re-base digitalby overlay onto latest upstream release
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.SYNC_PAT || github.token }}
+          HAS_PAT: ${{ secrets.SYNC_PAT != '' }}
         run: bash scripts/upstream-sync.sh

@@ -13,9 +13,11 @@ The fork is a **snapshot of an upstream release plus a thin digitalby overlay**:
   based on.
 - A daily workflow (`.github/workflows/upstream-sync.yml` →
   `scripts/upstream-sync.sh`) checks for a newer upstream release, re-applies the
-  overlay on top of it, and opens a PR. It auto-merges when the overlay applies
-  cleanly and opens an `action-needed` PR only when upstream changed something the
-  overlay also touches. Nobody has to remember to sync.
+  overlay on top of it, and opens a PR for review. When upstream changed something
+  the overlay also touches it opens an `action-needed` PR instead. Nobody has to
+  remember to sync. With a `SYNC_PAT` secret configured the sync PR triggers CI and
+  auto-merges once green (the default `GITHUB_TOKEN` cannot trigger CI on the PRs it
+  opens, so without the secret the PR waits for a human merge).
 
 ## What the digitalby overlay adds over upstream
 
