@@ -36,20 +36,22 @@ open class GitHubAPI {
         - repository: The GitHub URL for the repository. For example: `https://github.com/vtourraine/AcknowList.git`
         - completionHandler: The completion handler to call when the load request is complete. This handler is executed on the main queue. It takes a `Result` parameter, with either the body of the license, or an error object that indicates why the request failed.
      */
-    @discardableResult public static func getLicense(for repository: URL, completionHandler: @escaping (Result<String, Error>) -> Void) -> URLSessionDataTask {
+    @discardableResult public static func getLicense(for repository: URL, completionHandler: @escaping @MainActor @Sendable (Result<String, Error>) -> Void) -> URLSessionDataTask {
         // GitHub API documentation
         // https://docs.github.com/en/rest/licenses/licenses#get-the-license-for-a-repository
 
         let request = getLicenseRequest(for: repository)
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             DispatchQueue.main.async {
-                if (response as? HTTPURLResponse)?.statusCode == 200,
-                   let data,
-                   let text = String(data: data, encoding: .utf8) {
-                    completionHandler(.success(text))
-                }
-                else {
-                    completionHandler(.failure(error ?? URLError(URLError.Code.unknown)))
+                MainActor.assumeIsolated {
+                    if (response as? HTTPURLResponse)?.statusCode == 200,
+                       let data,
+                       let text = String(data: data, encoding: .utf8) {
+                        completionHandler(.success(text))
+                    }
+                    else {
+                        completionHandler(.failure(error ?? URLError(URLError.Code.unknown)))
+                    }
                 }
             }
         }
