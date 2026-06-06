@@ -30,7 +30,7 @@ import UIKit
 #endif
 
 internal extension URL {
-    func openWithDefaultBrowser() {
+    @MainActor func openWithDefaultBrowser() {
 #if os(macOS)
         NSWorkspace.shared.open(self)
 #elseif os(iOS)

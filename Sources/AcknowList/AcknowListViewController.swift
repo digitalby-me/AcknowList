@@ -140,14 +140,16 @@ open class AcknowListViewController: UITableViewController {
     override open func awakeFromNib() {
         super.awakeFromNib()
 
-        if let plistName = acknowledgementsPlistName,
-           let url = Bundle.main.url(forResource: plistName, withExtension: AcknowParser.K.DefaultPods.fileExtension),
-           let data = try? Data(contentsOf: url),
-           let acknowList = try? AcknowPodDecoder().decode(from: data) {
-            configure(with: acknowList)
-        }
-        else if let defaultAcknowList = AcknowParser.defaultAcknowList() {
-            configure(with: defaultAcknowList)
+        MainActor.assumeIsolated {
+            if let plistName = acknowledgementsPlistName,
+               let url = Bundle.main.url(forResource: plistName, withExtension: AcknowParser.K.DefaultPods.fileExtension),
+               let data = try? Data(contentsOf: url),
+               let acknowList = try? AcknowPodDecoder().decode(from: data) {
+                configure(with: acknowList)
+            }
+            else if let defaultAcknowList = AcknowParser.defaultAcknowList() {
+                configure(with: defaultAcknowList)
+            }
         }
     }
 #endif

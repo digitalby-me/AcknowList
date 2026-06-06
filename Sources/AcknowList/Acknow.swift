@@ -24,7 +24,7 @@
 import Foundation
 
 /// Represents a single acknowledgement.
-public struct Acknow {
+public struct Acknow: Sendable {
 
     /// The acknowledgement title (for instance: the pod or package’s name).
     public let title: String
