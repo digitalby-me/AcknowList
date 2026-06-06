@@ -1,7 +1,7 @@
 //
 // AcknowList.swift
 //
-// Copyright (c) 2015-2024 Vincent Tourraine (https://www.vtourraine.net)
+// Copyright (c) 2015-2026 Vincent Tourraine (https://www.vtourraine.net)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,28 +23,33 @@
 
 /// A list of acknowledgements, with optional header and footer texts.
 public struct AcknowList {
-    /**
-     Header text to be displayed above the list of the acknowledgements.
-     */
+    /// Header text to be displayed above the list of the acknowledgements.
     public let headerText: String?
 
-    /**
-     List of acknowledgements.
-     */
+    /// List of acknowledgements.
     public let acknowledgements: [Acknow]
 
-    /**
-     Footer text to be displayed below the list of the acknowledgements.
-     */
+    /// Footer text to be displayed below the list of the acknowledgements.
     public let footerText: String?
+
+    /// Returns an object describing a list of acknowledgements.
+    /// - Parameters:
+    ///   - headerText: The text to be displayed at the top of the list (optional).
+    ///   - acknowledgements: The list of acknowledgements.
+    ///   - footerText: The text to be displayed at the bottom of the list (optional).
+    public init(headerText: String? = nil, acknowledgements: [Acknow], footerText: String? = nil) {
+        self.headerText = headerText
+        self.acknowledgements = acknowledgements
+        self.footerText = footerText
+    }
 }
 
 extension AcknowList {
-    static func +(lhs: AcknowList, rhs: AcknowList) -> AcknowList {
-            return AcknowList(
-                headerText: lhs.headerText ?? rhs.headerText,
-                acknowledgements: lhs.acknowledgements + rhs.acknowledgements,
-                footerText: lhs.footerText ?? rhs.footerText
-            )
-        }
+    public static func +(lhs: AcknowList, rhs: AcknowList) -> AcknowList {
+        return AcknowList(
+            headerText: lhs.headerText ?? rhs.headerText,
+            acknowledgements: lhs.acknowledgements + rhs.acknowledgements,
+            footerText: lhs.footerText ?? rhs.footerText
+        )
+    }
 }

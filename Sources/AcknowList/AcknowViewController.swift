@@ -1,7 +1,7 @@
 //
 // AcknowViewController.swift
 //
-// Copyright (c) 2015-2024 Vincent Tourraine (https://www.vtourraine.net)
+// Copyright (c) 2015-2026 Vincent Tourraine (https://www.vtourraine.net)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(visionOS)
 import UIKit
 
 /// Subclass of `UIViewController` that displays a single acknowledgement.
-@available(iOS 9.0.0, tvOS 9.0.0, *)
+@available(iOS 9.0.0, tvOS 9.0.0, visionOS 1.0.0, *)
 open class AcknowViewController: UIViewController {
 
     /// The main text view.
     open var textView: UITextView?
 
     /// The represented acknowledgement.
-    var acknowledgement: Acknow?
+    open var acknowledgement: Acknow?
 
     /**
      Initializes the `AcknowViewController` instance with an acknowledgement.
