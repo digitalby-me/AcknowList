@@ -76,13 +76,18 @@ if [ "$CONFLICT" -eq 0 ]; then
 Automated sync to upstream vtourraine/AcknowList **$LATEST** (was $LAST_SYNCED).
 
 The digitalby overlay (Swift 6 language mode, Sendable, CI, automation) re-applied
-cleanly onto the new upstream snapshot. Auto-merge is enabled; it lands once CI is
-green. Review the diff if you want, otherwise no action is needed.
+cleanly onto the new upstream snapshot. Review the diff and merge once CI is green.
 EOF
   gh pr create --repo "$REPO" --base main --head "$BRANCH" \
     --title "chore: sync to upstream vtourraine $LATEST" --body-file "$BODY_FILE" --label automated
-  gh pr merge --repo "$REPO" "$BRANCH" --rebase --auto --delete-branch || \
-    log "could not enable auto-merge (will need a manual merge once CI is green)."
+  # Only auto-merge when a PAT opened the PR: pushes made with the default
+  # GITHUB_TOKEN do not trigger CI, so auto-merge there would land unvalidated.
+  if [ "${HAS_PAT:-false}" = "true" ]; then
+    gh pr merge --repo "$REPO" "$BRANCH" --rebase --auto --delete-branch || \
+      log "could not enable auto-merge (merge manually once CI is green)."
+  else
+    log "no SYNC_PAT: leaving the PR for review (CI will not run until the branch is nudged)."
+  fi
 else
   cat > "$BODY_FILE" <<EOF
 Automated sync to upstream vtourraine/AcknowList **$LATEST** (was $LAST_SYNCED).
