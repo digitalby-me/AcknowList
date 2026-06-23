@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.4.3 (22 June 2026)
+
+- Update `AcknowListViewController` to pass `hidesBottomBarWhenPushed` value to child controllers, by Maxim V. Potapov (@max-potapov)
+
+
 ## 3.4.2 (18 April 2026)
 
 - Update `AcknowList` to make the initializer and `+` operator public, by Andreas Ganske (@ChaosCoder)
